@@ -3,129 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summer's Stupid Shit Counter</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-            background-color: #282c34;
-            color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: #ff6347;
-        }
-
-        .counter {
-            font-size: 48px;
-            font-weight: bold;
-            color: #32cd32;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            font-size: 18px;
-            padding: 15px 30px;
-            background-color: #ff6347;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #ff4500;
-        }
-
-        .image {
-            margin-top: 20px;
-            width: 150px;
-            height: auto;
-        }
-    </style>
+    <title>Summer's Stupid Situations Counter</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <div class="container">
-        <h1>Summer's Stupid Shit Counter</h1>
-        <div class="counter" id="counter">0</div>
-        <button class="button" onclick="increaseCounter()">Increase Counter</button>
-        <img src="https://via.placeholder.com/150" alt="Stupid Shit" class="image">
+        <h1>Summer's Stupid Situations Counter</h1>
+        <div class="counter">
+            <p id="counter">0</p>
+            <button id="incrementBtn">Increment Counter</button>
+        </div>
+        <textarea id="commentInput" placeholder="Add a comment..." rows="4" cols="50"></textarea>
+        <button id="addCommentBtn">Add Comment</button>
+        <button id="resetBtn">Reset Counter</button>
+        <div id="commentsSection">
+            <h2>Comments:</h2>
+            <ul id="commentsList"></ul>
+        </div>
     </div>
 
-    <script type="module">
-        // Import necessary Firebase SDK modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getDatabase, ref, onValue, runTransaction, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
-
-        // Your Firebase project configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBJCXcBJndQG3Oc3lqWP4zjywDNQvxPvzA",
-            authDomain: "summers-counter.firebaseapp.com",
-            databaseURL: "https://summers-counter-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "summers-counter",
-            storageBucket: "summers-counter.firebasestorage.app",
-            messagingSenderId: "458498382578",
-            appId: "1:458498382578:web:f0a17ffda97a42b5c80e6b",
-            measurementId: "G-QR9Z7LR4PN"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        // Reference to the counter in Firebase Realtime Database
-        const counterRef = ref(database, 'counter');
-
-        // Function to update the displayed counter on the page
-        function updateCounterDisplay(counterValue) {
-            document.getElementById("counter").innerText = counterValue;
-        }
-
-        // Function to increment the counter by 1
-        function increaseCounter() {
-            console.log("Attempting to increase counter...");
-            runTransaction(counterRef, (currentValue) => {
-                const newValue = (currentValue || 0) + 1;
-                console.log("New counter value: ", newValue);
-                return newValue;
-            }).then(() => {
-                console.log("Counter successfully updated");
-            }).catch((error) => {
-                console.error("Error updating counter: ", error);
-            });
-        }
-
-        // Set up listener to listen for real-time changes to the counter
-        onValue(counterRef, (snapshot) => {
-            const counter = snapshot.exists() ? snapshot.val() : 0;
-            console.log("Received counter update: ", counter);
-            updateCounterDisplay(counter);
-        });
-
-        // Initialize the counter value when the page loads
-        get(counterRef).then((snapshot) => {
-            const counter = snapshot.exists() ? snapshot.val() : 0;
-            console.log("Initial counter value: ", counter);
-            updateCounterDisplay(counter);
-        });
-
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
+
