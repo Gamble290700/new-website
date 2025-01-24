@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summer's Stupid Shit Counter</title>
     <style>
-        /* Styling for the body */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f0f0f0;
@@ -16,7 +15,6 @@
             margin: 0;
         }
 
-        /* Styling the main container */
         .container {
             text-align: center;
             background-color: #282c34;
@@ -26,7 +24,6 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* Styling the title */
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
@@ -34,7 +31,6 @@
             color: #ff6347;
         }
 
-        /* Styling the counter */
         .counter {
             font-size: 48px;
             font-weight: bold;
@@ -42,7 +38,6 @@
             margin-bottom: 20px;
         }
 
-        /* Button style */
         .button {
             font-size: 18px;
             padding: 15px 30px;
@@ -53,12 +48,10 @@
             transition: background-color 0.3s ease;
         }
 
-        /* Button hover effect */
         .button:hover {
             background-color: #ff4500;
         }
 
-        /* Optional image style */
         .image {
             margin-top: 20px;
             width: 150px;
@@ -68,42 +61,70 @@
 </head>
 <body>
 
-    <!-- Main container with title, counter, and button -->
     <div class="container">
         <h1>Summer's Stupid Shit Counter</h1>
         <div class="counter" id="counter">0</div>
         <button class="button" onclick="increaseCounter()">Increase Counter</button>
-        
-        <!-- Optional fun image to represent "stupid shit" -->
         <img src="https://via.placeholder.com/150" alt="Stupid Shit" class="image">
     </div>
 
-    <script>
-        // Retrieve the saved counter value from localStorage
-        let counter = localStorage.getItem("counter");
+    <script type="module">
+        // Import necessary Firebase SDK modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
 
-        // If no saved value, initialize counter to 0
-        if (counter === null) {
-            counter = 0;
-        } else {
-            counter = parseInt(counter);
+        // Your Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJCXcBJndQG3Oc3lqWP4zjywDNQvxPvzA",
+            authDomain: "summers-counter.firebaseapp.com",
+            databaseURL: "https://summers-counter-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "summers-counter",
+            storageBucket: "summers-counter.firebasestorage.app",
+            messagingSenderId: "458498382578",
+            appId: "1:458498382578:web:f0a17ffda97a42b5c80e6b",
+            measurementId: "G-QR9Z7LR4PN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Reference to the counter in Firebase Realtime Database
+        const counterRef = ref(database, 'counter');
+
+        // Function to update the displayed counter on the page
+        function updateCounterDisplay(counterValue) {
+            document.getElementById("counter").innerText = counterValue;
         }
 
-        // Function to update the displayed counter value
-        function updateCounterDisplay() {
-            document.getElementById("counter").innerText = counter;
-        }
-
-        // Function to increase the counter and save it
+        // Function to increment the counter by 1
         function increaseCounter() {
-            counter++;
-            // Save the updated counter value in localStorage
-            localStorage.setItem("counter", counter);
-            updateCounterDisplay();
+            console.log("Attempting to increase counter...");
+            runTransaction(counterRef, (currentValue) => {
+                const newValue = (currentValue || 0) + 1;
+                console.log("New counter value: ", newValue);
+                return newValue;
+            }).then(() => {
+                console.log("Counter successfully updated");
+            }).catch((error) => {
+                console.error("Error updating counter: ", error);
+            });
         }
 
-        // Update the counter display on page load
-        updateCounterDisplay();
+        // Set up listener to listen for real-time changes to the counter
+        onValue(counterRef, (snapshot) => {
+            const counter = snapshot.exists() ? snapshot.val() : 0;
+            console.log("Received counter update: ", counter);
+            updateCounterDisplay(counter);
+        });
+
+        // Initialize the counter value when the page loads
+        get(counterRef).then((snapshot) => {
+            const counter = snapshot.exists() ? snapshot.val() : 0;
+            console.log("Initial counter value: ", counter);
+            updateCounterDisplay(counter);
+        });
+
     </script>
 
 </body>
