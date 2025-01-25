@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summer's Stupid Situations Counter</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Counter</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <script src="counter.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .counter {
+      font-size: 48px;
+      margin: 20px;
+    }
+    button {
+      font-size: 20px;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Summer's Stupid Situations Counter</h1>
-        <div class="counter">
-            <p id="counter">0</p>
-            <button id="incrementBtn">Increment Counter</button>
-        </div>
-        <textarea id="commentInput" placeholder="Add a comment..." rows="4" cols="50"></textarea>
-        <button id="addCommentBtn">Add Comment</button>
-        <button id="resetBtn">Reset Counter</button>
-        <div id="commentsSection">
-            <h2>Comments:</h2>
-            <ul id="commentsList"></ul>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  <h1>Firebase Counter</h1>
+  <div class="counter" id="counter">Loading...</div>
+  <button id="incrementButton">Increment</button>
+  <button id="decrementButton">Decrement</button>
 </body>
 </html>
-
